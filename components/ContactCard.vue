@@ -1,18 +1,17 @@
 <template>
   <section class="card">
-    <img/>
+    <img src="../assets/Agostinho.png"/>
 
-    <secttion class="contact">
+    <section class="contact">
       <h2>Augustinho Carrara</h2>
 
-      <div class="message">199,99 asdasdasd asdasda aasdas  sadas asd asdas asd asdsdasdasdsad asdasd asdas dsadsad sadaasd asdas asd a</div>
-    </secttion>
+      <article class="message">199,99 asdasdasd asdasda aasdas  sadas asd asdas asd asdsdasdasdsad asdasd asdas dsadsad sadaasd asdas asd a</article>
+    </section>
   </section>
 </template>
 
 <style>
   .card {
-    width: 100%;
     display: flex;
     height: 5.375rem;
     padding: 0rem 0.5rem;
@@ -23,9 +22,8 @@
   }
 
   .contact {
+    width: 17.5rem;
     display: flex;
-    width: 100%;
-    height: 1.8125rem;
     flex-direction: column;
     justify-content: flex-end;
     
@@ -42,10 +40,9 @@
 
   .message {
     color: #46464A;
-    width: 100px;
     white-space: nowrap;
-    /* overflow: hidden; */
     text-overflow: ellipsis;
+    overflow: hidden;
     font-size: 0.875rem;
     line-height: 1.575rem 
   }

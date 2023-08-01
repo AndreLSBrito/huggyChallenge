@@ -1,10 +1,11 @@
 <template>
-  <section class="container">
+  <section class="mainPage">
     <aside class="inBox">
       <section class="headerInBox">
         <h1 >Minhas Mensagens</h1>     
       </section>
       
+      <ContactCard/>
       <ContactCard/>
     </aside>
     <main class="chat">
@@ -32,7 +33,7 @@
   padding: 0;
 }
 
-.container{
+.mainPage{
   display: flex;
   height: 100vh;
 }
