@@ -3,12 +3,21 @@
     <img src="../assets/Agostinho.png"/>
 
     <section class="contact">
-      <h2>Augustinho Carrara</h2>
+      <h2>{{ contact }}</h2>
 
-      <article class="message">199,99 asdasdasd asdasda aasdas  sadas asd asdas asd asdsdasdasdsad asdasd asdas dsadsad sadaasd asdas asd a</article>
+      <article class="message">{{ lastMessage }}</article>
     </section>
   </section>
 </template>
+
+<script>
+  export default {
+    props: [
+      'contact',
+      'lastMessage'
+  ]
+  }
+</script>
 
 <style>
   .card {
@@ -19,6 +28,7 @@
     gap: 0.75rem;
     border-radius: 0.25rem;
     background:  #EEF0FC;
+    
   }
 
   .contact {
@@ -26,14 +36,12 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    
+    cursor: pointer;
   }
 
   h2 {
     color: #2934A5;
-    font-family: IBM Plex Sans;
     font-size: 1rem;
-    font-style: normal;
     font-weight: 500;
     line-height: 1.6rem 
   }
