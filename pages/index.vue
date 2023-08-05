@@ -19,7 +19,7 @@
         :contactName="chats[activeChat].name"
       />
      
-      <article class="chatList">
+      <section class="chatList">
         <Message
           v-for="(message, indexMessage) in chats[activeChat].messages"
           :key="indexMessage"
@@ -28,44 +28,45 @@
           :user="message.user"
           :file="message.file"
         />
+      </section>
 
-        <section class="inputContainer">
-          <section class="inputMessage">
-            <input
-              type="text"
-              class="inputText"
-              placeholder="Escreva sua mensagem..."
-              v-model="contentNewMessage"
-              v-on:keyup.enter="sentMessage"  
-            />
-            
-            <section class="imageSection">
-              <section v-if="selectedImage" class="imageContainer">
-                <figure class="imagePreview">
-                  <img :src="selectedImage" alt="Imagem selecionada" />
-                </figure>
-                
-                <PhXCircle @:click="handleImageRemove" class="iconRemove" size="18" weight="thin" />
-              </section>
-              
-              <label v-else class="iconContainer">
-                <input type="file" @change="handleImageUpload" class="imageInput" />
-                <PhImage  class="icon" size="24" weight="thin" color="#75757B"/>
-              </label>
-
-            </section>  
-          </section>
+        
+      
+      <section class="inputContainer">
+        <section class="inputMessage">
+          <input
+            type="text"
+            class="inputText"
+            placeholder="Escreva sua mensagem..."
+            v-model="contentNewMessage"
+            v-on:keyup.enter="sentMessage"  
+          />
           
-          <button
-           class="sendButton"
-            @:click="sentMessage"
-            :disabled="contentNewMessage.trim() == '' && selectedImage==null"
-          >
-            Enviar
-          </button>
-        </section>
+          <section class="imageSection">
+            <section v-if="selectedImage" class="imageContainer">
+              <figure class="imagePreview">
+                <img :src="selectedImage" alt="Imagem selecionada" />
+              </figure>
+              
+              <PhXCircle @:click="handleImageRemove" class="iconRemove" size="18" weight="thin" />
+            </section>
+            
+            <label v-else class="iconContainer">
+              <input type="file" @change="handleImageUpload" class="imageInput" />
+              <PhImage  class="icon" size="24" weight="thin" color="#75757B"/>
+            </label>
 
-      </article>
+          </section>  
+        </section>
+        
+        <button
+         class="sendButton"
+          @:click="sentMessage"
+          :disabled="contentNewMessage.trim() == '' && selectedImage==null"
+        >
+          Enviar
+        </button>
+      </section>
     </main>
   </section>
 </template>
@@ -131,55 +132,63 @@
 
 <style>
 
-*{
+* {
   margin: 0;
   padding: 0;
 }
 
-html, body{
-  width: 100vw;
-  height: 100vh;
+html, body, main, aside{
+  border: 1px solid red;
+  max-width: 100vw;
+  max-height: 35rem;
 }
 
-
-.mainPage{
+.mainPage {
   display: flex;
+  border: 1px solid red;
+  width: 100%;
+  height: 100%;
 }
 
-.inBox{
+.inBox {
   margin: 0 0.5rem;
-  flex:1;
+  border: 1px solid red;
+  height: 100%;
+  overflow-y: auto;
 }
 
-.headerInBox{
+.headerInBox {
   margin: 0.88rem 0;
   padding: 0 1rem;
   align-items: center;
+  border: 1px solid red;
 }
 
-h1{
+h1 {
   color: #2934A5;
   font-size: 1.25rem;
   font-weight: 500;
   line-height: 180%; /* 2.25rem */
 }
 
-.chat{
-  flex: 3;
+.chat {
+  flex: 1;
+  padding: 0 1rem 1.5rem;
+  flex-direction: column;
   background-color: #F6F6F8;
-  height: 100vh;
+  border: 1px solid red;
+  height: 100%;
   overflow: auto;
-  
 }
 
 .chatList{
-  margin-top: 2.5rem;
-  padding: 1.5rem 1rem;
+  height: 100%;
   justify-content: flex-end;
   flex-direction: column;
+  overflow-y: auto;
 }
 
-.inputContainer{
+.inputContainer {
   display: flex;
   padding: 1rem 1.5rem;
   flex-direction: column;
@@ -189,7 +198,7 @@ h1{
   background: #FFF;
 }
 
-.inputMessage{
+.inputMessage {
   display: flex;
   padding: 0.5rem 0.5rem 0rem 0.5rem;
   flex-direction: column;
@@ -199,7 +208,7 @@ h1{
   border: 1px solid var(--color-border-neutral-1, #E8E8EB);
 }
 
-.inputText{
+.inputText {
   display: flex;
   padding: 0.25rem 0.75rem;
   align-items: flex-start;
@@ -208,7 +217,7 @@ h1{
   border: none;
 }
 
-.imageSection{
+.imageSection {
   width: 100%;
   display: flex;
   justify-content: flex-end;

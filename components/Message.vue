@@ -2,7 +2,7 @@
   <section class="containerMessage">
     <section :class="user ? 'userMessage' : 'contactMessage'">
       <figure v-if="file" class="imgContainer">
-        <img v-if="file" :src="file" alt="imagem enviada" class="imageMessage"/>
+        <img :src="file" alt="imagem enviada" class="imageMessage"/>
       </figure>
       <p>{{ content }}</p>
     </section>
@@ -27,12 +27,15 @@
  
 <style>
  .containerMessage{
+    border: 1px solid blue;
+   
     display: flex;
-    padding: 0.5rem 0rem 0.5rem 1rem;
+   
     flex-direction: column;
     color: #232326;
     font-size: 0.75rem;
     line-height: 1.35rem; 
+    
   }
 
   .imgContainer {
@@ -65,7 +68,7 @@
     display: flex;
     align-self: flex-end;
     padding: 0.875rem 1.25rem;
-    justify-content: flex-end;
+    align-self: flex-end;
     flex-direction: column;
     gap: 0.625rem;
     border-radius: 0.375rem 0.375rem 0.125rem 0.375rem;
