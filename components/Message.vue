@@ -1,14 +1,13 @@
 <template>
   <section class="containerMessage">
-    <section v-if="user" class="userMessage">
-      {{ content }}
-    </section>
-
-    <section v-else class="contactMessage">
-      {{ content }}
+    <section :class="user ? 'userMessage' : 'contactMessage'">
+      <figure v-if="file" class="imgContainer">
+        <img v-if="file" :src="file" alt="imagem enviada" class="imageMessage"/>
+      </figure>
+      <p>{{ content }}</p>
     </section>
     
-    <p v-bind:class="{userHour: user}">
+    <p :class="{userHour: user}">
       {{ hour }}
     </p>
 
@@ -20,8 +19,9 @@
     props: [
       'content',
       'hour',
-      'user'
-    ]
+      'user',
+      'file'
+    ],  
   }
 </script>
  
@@ -32,13 +32,29 @@
     flex-direction: column;
     color: #232326;
     font-size: 0.75rem;
-    line-height: 1.35rem 
+    line-height: 1.35rem; 
+  }
+
+  .imgContainer {
+    display: flex;
+    width: 17.5rem;
+    height: 15rem;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .imageMessage {
+    display: flex;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
   }
 
   .contactMessage{
     display: flex;
     padding: 0.875rem 1.25rem;
     align-self: flex-start;
+    flex-direction: column;
     border-radius: 0.375rem 0.375rem 0.375rem 0.125rem;
     border: 1px solid #DCDCE1;
     background:  #FFF;
@@ -50,6 +66,7 @@
     align-self: flex-end;
     padding: 0.875rem 1.25rem;
     justify-content: flex-end;
+    flex-direction: column;
     gap: 0.625rem;
     border-radius: 0.375rem 0.375rem 0.125rem 0.375rem;
     border: 1px solid #374FC9;
@@ -61,4 +78,5 @@
   .userHour{
     align-self: flex-end;
   }
+
 </style>

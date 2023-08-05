@@ -10,7 +10,7 @@
         @click="activeChat = indexChat"
         :contact="chat.name"
         :lastMessage="'199,99 asdasdsadasdasdasdsadsdasdsdasdsadasdasddasd'"
-        v-bind:key="indexChat"
+        :key="indexChat"
       />
      
     </aside>
@@ -22,10 +22,11 @@
       <article class="chatList">
         <Message
           v-for="(message, indexMessage) in chats[activeChat].messages"
-          v-bind:key="indexMessage"
+          :key="indexMessage"
           :content="message.content"
           :hour="message.hour"
           :user="message.user"
+          :file="message.file"
         />
 
         <section class="inputContainer">
@@ -33,18 +34,18 @@
             <input
               type="text"
               class="inputText"
-              placeholder="Escreva sua mensagem"
+              placeholder="Escreva sua mensagem..."
               v-model="contentNewMessage"
               v-on:keyup.enter="sentMessage"  
             />
             
             <section class="imageSection">
               <section v-if="selectedImage" class="imageContainer">
-                <span class="imagePreview">
+                <figure class="imagePreview">
                   <img :src="selectedImage" alt="Imagem selecionada" />
-                </span>
+                </figure>
                 
-                <PhXCircle v-on:click="handleImageRemove" class="iconRemove" size="18" weight="thin" />
+                <PhXCircle @:click="handleImageRemove" class="iconRemove" size="18" weight="thin" />
               </section>
               
               <label v-else class="iconContainer">
@@ -57,8 +58,8 @@
           
           <button
            class="sendButton"
-            v-on:click="sentMessage"
-            v-bind:disabled="contentNewMessage.trim() == ''"
+            @:click="sentMessage"
+            :disabled="contentNewMessage.trim() == '' && selectedImage==null"
           >
             Enviar
           </button>
@@ -91,15 +92,17 @@
         let newMessage = {
           "hour": currentTime,
           "content": this.contentNewMessage,
-          "user": true
+          "user": true,
+          "file": this.selectedImage
         };
-
+       
         this.chats[this.activeChat]
           .messages
           .push(newMessage)
         ;
 
         this.contentNewMessage="";
+        this.selectedImage= null
 
         
       },
@@ -131,6 +134,11 @@
 *{
   margin: 0;
   padding: 0;
+}
+
+html, body{
+  width: 100vw;
+  height: 100vh;
 }
 
 
@@ -249,6 +257,11 @@ h1{
   background: #38A96D;
   color: #fff;
   border: none;
+}
+
+.sendButton:hover:not(:disabled){
+  opacity: 0.6;
+  transition: 0.2s;
 }
 
 .sendButton:disabled{
