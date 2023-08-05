@@ -28,14 +28,11 @@
 <style>
  .containerMessage{
     border: 1px solid blue;
-   
     display: flex;
-   
     flex-direction: column;
     color: #232326;
     font-size: 0.75rem;
     line-height: 1.35rem; 
-    
   }
 
   .imgContainer {
@@ -43,7 +40,6 @@
     width: 17.5rem;
     height: 15rem;
     align-items: center;
-    justify-content: center;
   }
 
   .imageMessage {

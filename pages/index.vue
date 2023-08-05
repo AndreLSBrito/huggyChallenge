@@ -30,8 +30,6 @@
         />
       </section>
 
-        
-      
       <section class="inputContainer">
         <section class="inputMessage">
           <input
@@ -178,10 +176,10 @@ h1 {
   background-color: #F6F6F8;
   border: 1px solid red;
   height: 100%;
-  overflow: auto;
 }
 
 .chatList{
+  display: flex;
   height: 100%;
   justify-content: flex-end;
   flex-direction: column;
