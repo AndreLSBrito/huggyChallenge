@@ -35,10 +35,45 @@ export const chats = [
       {
         "hour": "10:35",
         "content": "199,99 sadsadsadsa asdasasdasdas asdasdas asd asd as asd asdsa",
+        "user": true,
+        "file": null
+      },
+      {
+        "hour": "10:35",
+        "content": "199,99 sadsadsadsa asdasasdasdas asdasdas asd asd as asd asdsa",
+        "user": true,
+        "file": null
+      },
+      {
+        "hour": "10:35",
+        "content": "199,99 sadsadsadsa asdasasdasdas asdasdas asd asd as asd asdsa",
+        "user": true,
+        "file": null
+      },
+      {
+        "hour": "10:35",
+        "content": "199,99 sadsadsadsa asdasasdasdas asdasdas asd asd as asd asdsa",
         "user": false,
         "file": null
       },
-      
+      {
+        "hour": "10:35",
+        "content": "199,99 sadsadsadsa asdasasdasdas asdasdas asd asd as asd asdsa",
+        "user": false,
+        "file": null
+      },
+      {
+        "hour": "10:35",
+        "content": "199,99 sadsadsadsa asdasasdasdas asdasdas asd asd as asd asdsa",
+        "user": false,
+        "file": null
+      },
+      {
+        "hour": "10:35",
+        "content": "199,99 sadsadsadsa asdasasdasdas asdasdas asd asd as asd asdsa",
+        "user": false,
+        "file": null
+      },
     ]
   },
   {

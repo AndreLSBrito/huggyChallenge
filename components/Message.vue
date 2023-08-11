@@ -27,7 +27,6 @@
  
 <style>
  .containerMessage{
-    border: 1px solid blue;
     display: flex;
     flex-direction: column;
     color: #232326;

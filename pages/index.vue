@@ -19,7 +19,7 @@
         :contactName="chats[activeChat].name"
       />
      
-      <section class="chatList">
+      <section class="chatList" ref="chatMessages">
         <Message
           v-for="(message, indexMessage) in chats[activeChat].messages"
           :key="indexMessage"
@@ -83,6 +83,10 @@
       }
     },
 
+    mounted(){
+      this.scrollToBottom()
+    },
+
     methods: {
       sentMessage: function(){
 
@@ -101,8 +105,10 @@
         ;
 
         this.contentNewMessage="";
-        this.selectedImage= null
-
+        this.selectedImage= null;
+        this.$nextTick(() => {
+          this.scrollToBottom();
+        });
         
       },
 
@@ -117,6 +123,12 @@
 
       handleImageRemove(){
         this.selectedImage = null
+      },
+
+      scrollToBottom(){
+        const chatMessages = this.$refs.chatMessages
+
+        chatMessages.scrollTop = chatMessages.scrollHeight
       }
     },
 
@@ -135,22 +147,14 @@
   padding: 0;
 }
 
-html, body, main, aside{
-  border: 1px solid red;
-  max-width: 100vw;
-  max-height: 35rem;
-}
-
 .mainPage {
   display: flex;
-  border: 1px solid red;
-  width: 100%;
-  height: 100%;
+  max-width: 100vw;
+  max-height: 100vh;
 }
 
 .inBox {
   margin: 0 0.5rem;
-  border: 1px solid red;
   height: 100%;
   overflow-y: auto;
 }
@@ -159,7 +163,6 @@ html, body, main, aside{
   margin: 0.88rem 0;
   padding: 0 1rem;
   align-items: center;
-  border: 1px solid red;
 }
 
 h1 {
@@ -170,20 +173,18 @@ h1 {
 }
 
 .chat {
+  display: flex;
   flex: 1;
   padding: 0 1rem 1.5rem;
   flex-direction: column;
   background-color: #F6F6F8;
-  border: 1px solid red;
-  height: 100%;
-}
+  height: 95vh;
+}  
 
 .chatList{
-  display: flex;
-  height: 100%;
-  justify-content: flex-end;
-  flex-direction: column;
+  max-height: 100%;
   overflow-y: auto;
+  flex: 1;
 }
 
 .inputContainer {
