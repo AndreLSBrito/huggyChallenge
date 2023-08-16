@@ -132,17 +132,14 @@
         //   this.scrollToBottom();
         // });
 
-          await $fetch(`/api/message.post`, {
-            methods: 'POST',
-            params:{
-              id : id
-            },
-            body: JSON.stringify({
-              text: this.contentNewMessage,
-              file: this.selectedImage,
-              isInternal: false,
-            }),
-          })
+        await $fetch(`/api/${id}/message`, {
+          method: 'POST',
+          body: JSON.stringify({
+            text: this.contentNewMessage,
+            file: this.selectedImage,
+            isInternal: false,
+          }),
+        })
         
       },
 
