@@ -8,24 +8,24 @@
       <ContactCard
         v-for="(chat, indexChat) in chats"
         @click="activeChat = indexChat"
-        :contact="chat.name"
-        :lastMessage="'199,99 asdasdsadasdasdasdsadsdasdsdasdsadasdasddasd'"
+        :contact="chat.chatCustomer ? chat.chatCustomer.name : ''"
+        :lastMessage="chat.lastMessage ? chat.lastMessage.text : ''"
         :key="indexChat"
       />
      
     </aside>
     <main class="chat">
       <HeaderSection
-        :contactName="chats[activeChat].name"
+        :contactName="chats[activeChat] ? chats[activeChat].chatCustomer.name: ''"
       />
      
       <section class="chatList" ref="chatMessages">
         <Message
-          v-for="(message, indexMessage) in chats[activeChat].messages"
+          v-for="(message, indexMessage) in messages"
           :key="indexMessage"
-          :content="message.content"
-          :hour="message.hour"
-          :user="message.user"
+          :content="message.text"
+          :hour="message.sendAt"
+          :user="message.receiver===null"
           :file="message.file"
         />
       </section>
@@ -37,7 +37,7 @@
             class="inputText"
             placeholder="Escreva sua mensagem..."
             v-model="contentNewMessage"
-            v-on:keyup.enter="sentMessage"  
+            v-on:keyup.enter="()=>sendMessage(chats[activeChat].id)"  
           />
           
           <section class="imageSection">
@@ -59,7 +59,7 @@
         
         <button
          class="sendButton"
-          @:click="sentMessage"
+          @:click="()=>sendMessage(chats[activeChat].id)"
           :disabled="contentNewMessage.trim() == '' && selectedImage==null"
         >
           Enviar
@@ -70,45 +70,79 @@
 </template>
 
 <script>
-  import { chats } from '../dados';
+  // import { chats } from '../dados';
   import { PhImage, PhXCircle } from "@phosphor-icons/vue";
+
   
   export default {
-    data: function(){
+
+    data(){
       return {
-        chats: chats,
+        chats:[],
+        messages: [],
         activeChat: 0,
         contentNewMessage: "",
         selectedImage: null
       }
     },
 
-    mounted(){
-      this.scrollToBottom()
+    async mounted(){
+      await this.fetchChats();
+      this.chats && await this.fetchMessages(this.chats[0].id);
+      this.scrollToBottom();
+
     },
 
     methods: {
-      sentMessage: function(){
 
-        let currentTime = new Date().getHours() +":" + new Date().getMinutes();
+      async fetchChats(){
+  
+        const data = await $fetch('/api/chats')
+        return this.chats = data
+      },
 
-        let newMessage = {
-          "hour": currentTime,
-          "content": this.contentNewMessage,
-          "user": true,
-          "file": this.selectedImage
-        };
+      async fetchMessages(id){
+  
+        const data = await $fetch(`/api/${id}/messages`)
+        if(data){
+          data.reverse()
+        }
+        return this.messages = data
+      },
+
+      async sendMessage(id){
+
+        // let currentTime = new Date().getHours() +":" + new Date().getMinutes();
+
+        // let newMessage = {
+        //   "hour": currentTime,
+        //   "content": this.contentNewMessage,
+        //   "user": true,
+        //   "file": this.selectedImage
+        // };
        
-        this.chats[this.activeChat]
-          .messages
-          .push(newMessage)
-        ;
+        // this.chats[this.activeChat]
+        //   .messages
+        //   .push(newMessage)
+        // ;
 
-        this.contentNewMessage="";
-        this.selectedImage= null;
-        this.$nextTick(() => {
-          this.scrollToBottom();
-        });
+        // this.contentNewMessage="";
+        // this.selectedImage= null;
+        // this.$nextTick(() => {
+        //   this.scrollToBottom();
+        // });
+
+          await $fetch(`/api/message.post`, {
+            methods: 'POST',
+            params:{
+              id : id
+            },
+            body: JSON.stringify({
+              text: this.contentNewMessage,
+              file: this.selectedImage,
+              isInternal: false,
+            }),
+          })
         
       },
 
@@ -185,11 +219,12 @@ h1 {
   max-height: 100%;
   overflow-y: auto;
   flex: 1;
+  flex-direction: column-reverse;
 }
 
 .inputContainer {
   display: flex;
-  padding: 1rem 1.5rem;
+  padding: 1rem 1.5rem 1rem 0;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
@@ -199,7 +234,7 @@ h1 {
 
 .inputMessage {
   display: flex;
-  padding: 0.5rem 0.5rem 0rem 0.5rem;
+  padding: 0.5rem 0.5rem 0.5rem 0;
   flex-direction: column;
   align-items: flex-start;
   align-self: stretch;
