@@ -8,7 +8,7 @@
     </section>
     
     <p :class="{userHour: user}">
-      {{ hour }}
+      {{ `${new Date(hour).getHours()}:${new Date(hour).getMinutes()}` }}
     </p>
 
   </section>
