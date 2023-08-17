@@ -25,7 +25,7 @@
           :key="indexMessage"
           :content="message.text"
           :hour="message.sendAt"
-          :user="message.receiver===null"
+          :user="message.receiver!==null"
           :file="message.file"
         />
       </section>
@@ -70,7 +70,6 @@
 </template>
 
 <script>
-  // import { chats } from '../dados';
   import { PhImage, PhXCircle } from "@phosphor-icons/vue";
 
   
@@ -111,36 +110,26 @@
       },
 
       async sendMessage(id){
-
-        // let currentTime = new Date().getHours() +":" + new Date().getMinutes();
-
-        // let newMessage = {
-        //   "hour": currentTime,
-        //   "content": this.contentNewMessage,
-        //   "user": true,
-        //   "file": this.selectedImage
-        // };
-       
-        // this.chats[this.activeChat]
-        //   .messages
-        //   .push(newMessage)
-        // ;
-
-        // this.contentNewMessage="";
-        // this.selectedImage= null;
-        // this.$nextTick(() => {
-        //   this.scrollToBottom();
-        // });
-
-        await $fetch(`/api/${id}/message`, {
-          method: 'POST',
-          body: JSON.stringify({
-            text: this.contentNewMessage,
-            file: this.selectedImage,
-            isInternal: false,
-          }),
-        })
-        
+        try {
+          await $fetch(`/api/message/${id}/messages`, {
+            method: 'POST',
+            body: JSON.stringify({
+              text: this.contentNewMessage,
+              file: this.selectedImage,
+              isInternal: false,
+            }),
+          })
+          
+          this.contentNewMessage="";
+          this.selectedImage= null;
+          await this.fetchMessages(id);
+          this.$nextTick(() => {
+            this.scrollToBottom();
+          });
+          
+        } catch (error) {
+          console.log('Erro no envio da mensagem')
+        }
       },
 
       handleImageUpload(event) {
