@@ -3,7 +3,7 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event)
     const response = await fetch(`${process.env.BASE_URL}/chats/${event?.context?.params?.message}`,{
       method: 'POST',
-      body: body,
+      body: JSON.stringify(body),
       headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
@@ -12,8 +12,9 @@ export default defineEventHandler(async (event) => {
     })
 
     const result = await response.json()
+
+    return result
     
-    console.log("🚀 ~ file: [...message].post.ts:6 ~ defineEventHandler ~ result:", result)
     
   } catch (error) {
     console.log(error)
