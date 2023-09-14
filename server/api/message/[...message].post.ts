@@ -15,7 +15,6 @@ export default defineEventHandler(async (event) => {
 
     return result
     
-    
   } catch (error) {
     console.log(error)
     console.log('Não foi possível enviar mensagem')

@@ -1,5 +1,27 @@
 <template>
   <section class="mainPage">
+    <nav :class="isNavOpen ? 'sideNavOpen' : 'sideNav'">
+      <div class="navIcon" @click="toggleNav">
+        <PhCaretLeft v-if="isNavOpen" size="16" color="white"/>
+        <PhCaretRight v-else size="16" color="white"/>
+      </div>
+
+      <div v-if="isNavOpen">
+        <section class="headerInBox">
+          <h1 >Minhas Mensagens</h1>     
+        </section>
+        
+        <ContactCard
+          v-for="(chat, indexChat) in chats"
+          @click="activeChat = indexChat"
+          :contact="chat.chatCustomer ? chat.chatCustomer.name : ''"
+          :lastMessage="chat.lastMessage ? chat.lastMessage.text : ''"
+          :key="indexChat"
+          :src="chats[activeChat] ? chats[activeChat].chatCustomer.photo : 'https:\/\/c.pzw.io\/img\/avatar-user-boy.jpg'"
+        />
+      </div>
+    </nav>
+    
     <aside class="inBox">
       <section class="headerInBox">
         <h1 >Minhas Mensagens</h1>     
@@ -11,12 +33,14 @@
         :contact="chat.chatCustomer ? chat.chatCustomer.name : ''"
         :lastMessage="chat.lastMessage ? chat.lastMessage.text : ''"
         :key="indexChat"
+        :src="chats[activeChat] ? chats[activeChat].chatCustomer.photo : 'https:\/\/c.pzw.io\/img\/avatar-user-boy.jpg'"
       />
      
     </aside>
     <main class="chat">
       <HeaderSection
         :contactName="chats[activeChat] ? chats[activeChat].chatCustomer.name: ''"
+        :src="chats[activeChat] ? chats[activeChat].chatCustomer.photo : 'https:\/\/c.pzw.io\/img\/avatar-user-boy.jpg'"
       />
      
       <section class="chatList" ref="chatMessages">
@@ -50,7 +74,7 @@
             </section>
             
             <label v-else class="iconContainer">
-              <input type="file" @change="handleImageUpload" class="imageInput" />
+              <input type="file" @change="handleFileInputChange" class="imageInput" />
               <PhImage  class="icon" size="24" weight="thin" color="#75757B"/>
             </label>
 
@@ -70,18 +94,18 @@
 </template>
 
 <script>
-  import { PhImage, PhXCircle } from "@phosphor-icons/vue";
+  import { PhImage, PhXCircle, PhCaretLeft, PhCaretRight } from "@phosphor-icons/vue";
 
-  
   export default {
-
     data(){
       return {
         chats:[],
         messages: [],
         activeChat: 0,
         contentNewMessage: "",
-        selectedImage: null
+        selectedImage: null,
+        attachFile: null,
+        isNavOpen: false
       }
     },
 
@@ -89,10 +113,14 @@
       await this.fetchChats();
       this.chats && await this.fetchMessages(this.chats[0].id);
       this.scrollToBottom();
-
     },
 
     methods: {
+
+      toggleNav() {
+        // change sideNav state
+        this.isNavOpen = !this.isNavOpen;
+      },
 
       async fetchChats(){
   
@@ -111,18 +139,21 @@
 
       async sendMessage(id){
         try {
-          await $fetch(`/api/message/${id}/messages`, {
+          const url = await this.uploadFile();
+
+          const data =await $fetch(`/api/message/${id}/messages`, {
             method: 'POST',
             body: JSON.stringify({
               text: this.contentNewMessage,
-              file: this.selectedImage,
+              file: url,
               isInternal: false,
             }),
           })
           
           this.contentNewMessage="";
-          this.selectedImage= null;
-          await this.fetchMessages(id);
+          this.attachFile= null;
+          this.selectedImage = null;
+          await Promise.all([this.fetchMessages(id), this.fetchChats()]); 
           this.$nextTick(() => {
             this.scrollToBottom();
           });
@@ -132,17 +163,39 @@
         }
       },
 
-      handleImageUpload(event) {
-        const file = event.target.files[0];
-        if (file) {
-          this.selectedImage = URL.createObjectURL(file);
-        } else {
-          this.selectedImage = null;
+      handleFileInputChange(event) {
+        this.attachFile = event.target.files[0];
+        this.selectedImage = URL.createObjectURL(this.attachFile)
+      },
+
+      async uploadFile() {
+        if (!this.attachFile) {
+          return null;
+        }
+
+        const formData = new FormData();
+        formData.append('file', this.attachFile);
+
+        try {
+          const response = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
+          });
+
+          if (response.ok) {
+            const url = await response.text(); // A URL do arquivo no s3
+            return url
+          } else {
+            console.error('Erro ao fazer upload do arquivo:', response.statusText);
+          }
+        } catch (error) {
+          console.error('Erro ao fazer upload do arquivo:', error);
         }
       },
 
       handleImageRemove(){
-        this.selectedImage = null
+        this.selectedImage = null;
+        this.attachFile = null
       },
 
       scrollToBottom(){
@@ -154,7 +207,9 @@
 
     components: {
       PhImage,
-      PhXCircle
+      PhXCircle,
+      PhCaretLeft,
+      PhCaretRight
     },
 
   }
@@ -177,6 +232,7 @@
   margin: 0 0.5rem;
   height: 100%;
   overflow-y: auto;
+  
 }
 
 .headerInBox {
@@ -297,6 +353,52 @@ h1 {
   color: #9D9DA3 ;
   background-color: #DCDCE1;
 }
+
+.sideNav{
+  width: .5%;
+  height: 100%;
+  position: absolute;
+  z-index: 1;
+  background-color: #fff;
+  display: none;
+  transition: 0.5s;
+}
+
+.sideNavOpen{
+  width: 80%;
+  height: 100%;
+  position: absolute;
+  z-index: 1;
+  background-color: #fff;
+  transition: 0.5s;
+  box-shadow: 0 0 7px 7px #00000062;
+}
+
+.navIcon{
+  display: flex;
+  align-items: center;
+  position: relative;
+  top: 50%;
+  left: 95%;
+  border-radius: 0px;
+  background-color: #9D9DA3 ;
+  width: 1rem;
+  height: 2rem;
+}
+
+@media (max-width: 600px){
+  .inBox{
+    display: none;
+  }
+
+  .chat{
+    padding: 0 1.5rem 1rem 0;
+  }
+  .sideNav{
+    display: list-item;
+  }
+}
+
 
 </style>
 

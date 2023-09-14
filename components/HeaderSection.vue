@@ -1,6 +1,6 @@
 <template>
   <section class="headerContainer">
-    <img class="photoProfile" src="../assets/Agostinho.png" alt="Foto do contato"/>
+    <img class="photoProfile" :src="src" alt="Foto do contato"/>
     
     <p class="contactName">
       {{ contactName }}
@@ -11,7 +11,8 @@
 <script>
   export default {
     props: [
-      'contactName'
+      'contactName',
+      'src'
     ]
   }
 </script>

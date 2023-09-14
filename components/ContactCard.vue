@@ -1,6 +1,6 @@
 <template>
   <section class="card">
-    <img src="../assets/Agostinho.png"/>
+    <img :src="src" class="photoProfile"/>
 
     <section class="contact">
       <h2>{{ contact }}</h2>
@@ -14,7 +14,8 @@
   export default {
     props: [
       'contact',
-      'lastMessage'
+      'lastMessage',
+      'src'
   ]
   }
 </script>
@@ -29,6 +30,13 @@
     border-radius: 0.25rem;
     background:  #EEF0FC;
     
+  }
+
+  .photoProfile{
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 0.5rem;
+    border: 1px solid  #E8E8EB; 
   }
 
   .contact {
